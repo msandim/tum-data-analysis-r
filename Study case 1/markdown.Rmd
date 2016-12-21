@@ -10,6 +10,7 @@ library(data.table)
 library(tidyr)
 library(dplyr)
 library(ggplot2)
+library(gridExtra)
 ```
 
 # 1. Read the data.
@@ -63,6 +64,31 @@ ggplot(growth, aes(count, growth)) +
   geom_point() + geom_hex() +
   facet_grid(type~environment)
 ```
+
+We then plotted the genes with more expression (among all the strains) in the several environments. We concluded that the genes 3080, 3266 1477 and 1511 are the ones that expressed more in all of the environments.
+
+```{r}
+mean_expression <- expression %>% group_by(environment, gene) %>% summarise(mean_exp = mean(expression)) %>% arrange(environment, desc(mean_exp)) %>% group_by(environment) %>% top_n(n = 10)
+
+ggplot(mean_expression, aes(x = reorder(factor(gene), mean_exp), y = mean_exp, fill = gene)) +
+  geom_bar(stat = "identity") +
+  coord_flip() +
+  facet_wrap(~environment, scales="free") +
+  theme(legend.position="none")
+  
+```
+
+```{r}
+marker <- left_join(marker, marker %>% left_join(gene %>% mutate(gene = rownames(gene)), by="chrom") %>% filter(start.x >= start.y & end.x >= end.y) %>% select(id, gene), by="id")
+```
+
+```{r}
+mygeno <- genotype[, which(marker$chrom=="chr07" & marker$start== 1069229)]
+names(mygeno) <- genotype$strain
+plot(YPMalt ~ mygeno[strain], data=growth)
+```
+
+
 
 # 5. Is gene expression under genetic or environmental control? Is it more influenced by one or the other?
 

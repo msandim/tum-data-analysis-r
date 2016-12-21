@@ -1,0 +1,90 @@
+---
+title: "R Notebook"
+output:
+  html_document: default
+  html_notebook: default
+---
+
+```{r include=FALSE}
+library(data.table)
+library(tidyr)
+library(dplyr)
+library(ggplot2)
+```
+
+# 1. Read the data.
+
+```{r}
+expression <- fread("expression.txt")
+gene <- fread("gene.txt")
+genotype <- fread("genotype.txt")
+growth <- fread("growth.txt")
+marker <- fread("marker.txt")
+```
+
+# 2. Tidy the data
+
+```{r}
+genotype <- genotype %>% gather("marker", "type", starts_with("mrk_"))
+head(genotype)
+```
+
+```{r}
+expression <- expression %>% mutate(gene = rownames(expression)) %>% gather("stuff", "expression", starts_with("Y")) %>% separate(col = stuff, into = c("environment", "strain"), sep="\\-")
+head(expression)
+```
+
+
+```{r}
+growth <- growth %>% gather("environment", "growth", starts_with("Y"))
+head(growth)
+```
+
+# 3. Data pre-processing
+
+```{r}
+genotype_type <- genotype %>% group_by(strain) %>% summarise(NLabStrain = table(type)[["Lab strain"]], NWildIsolate = table(type)[["Wild isolate"]])
+head(genotype_type)
+```
+
+```{r}
+growth <- left_join(growth, genotype_type, by = "strain") %>% gather("type", "count", NLabStrain, NWildIsolate)
+head(growth)
+```
+
+# 4. Does the genotype also show differences in other media?
+
+In order to analyze the growth differences in the several environments, we plotted the growth of the several yeast strains according to number of markers belonging to the Lab Strains and the Wild Isolates.
+
+We concluded that the presence of markers belonging to Lab Strains and Wild Isolates doesn't affect the growth. However, it's ths environment itself that affects this variable (e.g. in YPD_Rapa and YPE the growth is clearly lower than the other environments, independently of the number of markers from each type).
+
+```{r}
+ggplot(growth, aes(count, growth)) +
+  geom_point() + geom_hex() +
+  facet_grid(type~environment)
+```
+
+# 5. Is gene expression under genetic or environmental control? Is it more influenced by one or the other?
+
+```{r}
+expression <- left_join(expression, genotype_type, by = "strain") %>% gather("type", "count", NLabStrain, NWildIsolate)
+head(expression)
+```
+
+
+```{r}
+#ggplot(expression, aes(count, expression)) +
+#  geom_point() + geom_hex() +
+#  facet_grid(type~environment)
+```
+
+
+```{r}
+#library(LSD)
+#heatscatter(Raw.datamat.data[, Sc.tnumber], log(Raw.datamat.data[, y]), xlim = c(0, 2000))
+```
+
+
+Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Ctrl+Alt+I*
+
+When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Ctrl+Shift+K* to preview the HTML file).

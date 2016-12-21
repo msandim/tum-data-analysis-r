@@ -1,9 +1,12 @@
 ---
-title: "R Notebook"
+title: "Data Analysis and Visualization in R - Study Case 1"
 output:
   html_document: default
   html_notebook: default
 ---
+
+### Daniela Simancas, Miguel Sandim, Paula Fortuna
+### TUM - Data Analysis and Visualization in R
 
 ```{r include=FALSE}
 library(data.table)
@@ -73,44 +76,13 @@ mean_expression <- expression %>% group_by(environment, gene) %>% summarise(mean
 ggplot(mean_expression, aes(x = reorder(factor(gene), mean_exp), y = mean_exp, fill = gene)) +
   geom_bar(stat = "identity") +
   coord_flip() +
+  #xlim(5,7) +
+  #scale_x_continuous(limits = c(5, 7)) +
   facet_wrap(~environment, scales="free") +
   theme(legend.position="none")
   
 ```
 
-```{r}
-marker <- left_join(marker, marker %>% left_join(gene %>% mutate(gene = rownames(gene)), by="chrom") %>% filter(start.x >= start.y & end.x >= end.y) %>% select(id, gene), by="id")
-```
+We match for each marker the respective gene, but then we found out that we only had a very small amount of genes that were marked, and our featuring genes were not contemplated. This way, the chart we ploted was always empty.
 
-```{r}
-mygeno <- genotype[, which(marker$chrom=="chr07" & marker$start== 1069229)]
-names(mygeno) <- genotype$strain
-plot(YPMalt ~ mygeno[strain], data=growth)
-```
-
-
-
-# 5. Is gene expression under genetic or environmental control? Is it more influenced by one or the other?
-
-```{r}
-expression <- left_join(expression, genotype_type, by = "strain") %>% gather("type", "count", NLabStrain, NWildIsolate)
-head(expression)
-```
-
-
-```{r}
-#ggplot(expression, aes(count, expression)) +
-#  geom_point() + geom_hex() +
-#  facet_grid(type~environment)
-```
-
-
-```{r}
-#library(LSD)
-#heatscatter(Raw.datamat.data[, Sc.tnumber], log(Raw.datamat.data[, y]), xlim = c(0, 2000))
-```
-
-
-Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Ctrl+Alt+I*
-
-When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Ctrl+Shift+K* to preview the HTML file).
+In order to solve this, our goal (which we didn't finish) was to try to find the nearest marker for every gene (so we could have information of the markers for the genes we are interested in) This way we could identify the type (lab strain or wild isolate).

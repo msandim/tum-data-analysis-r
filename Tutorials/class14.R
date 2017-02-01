@@ -76,5 +76,5 @@ getMetricCV <- function(data, f = getROC, nrFolds = 5)
   return(rocs)
 }
 
-cv_values <- getMetricCV(pima)
+cv_values <- getMetricCV(pima, nrFolds=10)
 boxplot(cv_values)

@@ -1,0 +1,6 @@
+{
+  "codons": ["TTT", "TTC", "TTA", "TTG", "TCT", "TCC", "TCA", "TCG", "TAT", "TAC", "TGT", "TGC", "TGG", "CTT", "CTC", "CTA", "CTG", "CCT", "CCC", "CCA", "CCG", "CAT", "CAC", "CAA", "CAG", "CGT", "CGC", "CGA", "CGG", "ATT", "ATC", "ATA", "ATG", "ACT", "ACC", "ACA", "ACG", "AAT", "AAC", "AAA", "AAG", "AGT", "AGC", "AGA", "AGG", "GTT", "GTC", "GTA", "GTG", "GCT", "GCC", "GCA", "GCG", "GAT", "GAC", "GAA", "GAG", "GGT", "GGC", "GGA", "GGG"],
+  "strains": ["ccr4", "caf40", "dcs1", "dcs2", "dhh1", "dom34", "edc2", "edc3", "hbs1", "lsm1", "lsm6", "lsm7", "not3", "pan2", "pan3", "pop2", "pat1", "pub1", "puf1", "puf2", "puf3", "puf4", "puf5", "puf6", "rrp47", "rrp6", "scd6", "ski2", "ski3", "ski7", "ski8", "upf2", "upf3", "xrn1", "WT"],
+  "sequences": ["CDS_seq", "UTR3_seq"],
+  "id": "genename"
+}

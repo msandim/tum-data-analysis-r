@@ -90,3 +90,4 @@ Rand_index <- function(X, Y)
 }
 
 # mixtures models are the best
+
